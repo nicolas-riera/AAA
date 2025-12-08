@@ -11,7 +11,7 @@
 
 <body>
     <header>
-        <h1> {{ machine_name }} </h1>
+        <h1>Dashboard - {{ machine_name }} {{ heure }}</h1>
     </header>
     <main>
 
@@ -20,6 +20,7 @@
             <h2>Système</h2>
             <p>Nom de la machine : {{ machine_name }}</p>
             <p>Système d'exploitation : {{ os_name }}</p>
+            <p>Heure de démarrage : {{ os_boot_time }}</p>
             <p>Uptime : {{ uptime }}</p>
             <p>Nombre d'utilisateurs : {{ user_nb }}</p>
         </section>
