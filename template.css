@@ -4,6 +4,13 @@ body {
     color: white;
 }
 
+header {
+    background-color: rgb(95, 94, 94);
+    border-radius: 5px;
+    padding: 5px;
+    border: 2px white solid;
+}
+
 h1 {
     text-align: center;
 }
@@ -24,6 +31,7 @@ section {
     border-radius: 5px;
     padding: 15px;
     margin: 8px;
+    background-color: rgb(95, 94, 94);
 }
 
 @media only screen and (max-width: 730px) {
