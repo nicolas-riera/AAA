@@ -5,7 +5,7 @@
     <title></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="2">
+    <meta http-equiv="refresh" content="5">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -50,10 +50,7 @@
 
         <!-- Process Section -->
         <section>
-            <h2>Processus</h2>
-        
-
-            <h3>Top 3 des processus les plus gourmands : </h3>
+            <h2>Top 3 des processus les plus gourmands : </h2>
             <ol>
                 <li>{{ process1 }}</li>
                 <li>{{ process2 }}</li>
@@ -68,6 +65,13 @@
             <p>{{ py_file_nb }} fichiers .py</p>
             <p>{{ pdf_file_nb }} fichiers .pdf</p>
             <p>{{ jpg_file_nb }} fichiers .jpg</p>
+        </section>
+
+        <!-- Process list Section -->
+        <section class="list_process">
+            <h2>Processus</h2>
+
+
         </section>
     </main>
     <footer>
