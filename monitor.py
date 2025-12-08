@@ -7,6 +7,8 @@ import os
 import psutil
 from datetime import *
 
+app = Flask(__name__)
+
 # Functions
 
 def get_users():
@@ -23,9 +25,8 @@ def get_users():
         pass
     return len(users)
 
-def get_txt_file_nb():
+def get_specific_file_nb(extension):
     START_DIR = "/home/"
-    extension = ".txt"
     count = 0
     for root, dirs, files in os.walk(START_DIR):
         for f in files:
@@ -36,72 +37,113 @@ def get_txt_file_nb():
                 continue
     return (count)
 
-def get_py_file_nb():
-    START_DIR = "/home/"
-    extension = ".py"
-    count = 0
-    for root, dirs, files in os.walk(START_DIR):
-        for f in files:
-            try:
-                if os.path.splitext(f)[1].lower() == extension:
-                    count += 1
-            except Exception:
-                continue
-    return (count)
+def afficher_l_heure():
+    maintenant = datetime.now().strftime("%H:%M:%S")
+    return render_template('template.html', heure=maintenant) 
 
-def get_pdf_file_nb():
-    START_DIR = "/home/"
-    extension = ".pdf"
-    count = 0
-    for root, dirs, files in os.walk(START_DIR):
-        for f in files:
-            try:
-                if os.path.splitext(f)[1].lower() == extension:
-                    count += 1
-            except Exception:
-                continue
-    return (count)
+def get_process_cpu_usage():
+    processes = []
+    for proc in psutil.process_iter(attrs=["pid", "name"]):
+        try:
+            proc.cpu_percent(interval=None)
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+    import time
+    time.sleep(0.1)
+    for proc in psutil.process_iter(attrs=["pid", "name"]):
+        try:
+            cpu = proc.cpu_percent(interval=None)
+            processes.append({
+                "pid": proc.info["pid"],
+                "name": proc.info["name"],
+                "cpu_percent": cpu
+            })
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
 
-def get_jpg_file_nb():
-    START_DIR = "/home/"
-    extension = ".jpg"
-    count = 0
-    for root, dirs, files in os.walk(START_DIR):
-        for f in files:
-            try:
-                if os.path.splitext(f)[1].lower() == extension:
-                    count += 1
-            except Exception:
-                continue
-    return (count)
+    return processes
 
+def get_process_ram_usage():
+    processes = []
+    for proc in psutil.process_iter(attrs=["pid", "name", "memory_percent"]):
+        try:
+            info = proc.info
+            processes.append({
+                "pid": info["pid"],
+                "name": info["name"],
+                "ram_percent": info["memory_percent"]
+            })
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+    return processes
 
-# Variables
+def get_top3_cpu_processes(processes):
+    processes_sorted = sorted(processes, key=lambda p: p["cpu_percent"], reverse=True)
+    return processes_sorted[:3]
+
+# Variables that can be calculed once
 
 machine_name = socket.gethostname()
 os_name = platform.platform()
 os_boot_time = datetime.fromtimestamp(psutil.boot_time())
-uptime = os.popen('uptime -p').read()[:-1]
-user_nb = len(set(u.name for u in psutil.users()))
 
 cpu_cores_nb = os.cpu_count()
-cpu_frequency = None
-cpu_usage = None
 
-total_ram = None
-ram_usage_nb = None
-ram_usage_percentage = None
+total_ram = round(psutil.virtual_memory().total / (1024**3), 1)
 
-ip_adress = None
+# Flask things
 
-process1 = None
-process2 = None
-process3 = None
+@app.route('/') 
 
-txt_file_nb = get_txt_file_nb()
-py_file_nb = get_py_file_nb()
-pdf_file_nb = get_pdf_file_nb()
-jpg_file_nb = get_jpg_file_nb()
+def home():
+    
+    # Variables that needs to be refreshed
 
-# Debugging
-print(machine_name, os_name, os_boot_time, uptime, user_nb, cpu_cores_nb, cpu_frequency, cpu_usage, total_ram, ram_usage_nb, ram_usage_percentage, ip_adress, process1, process2, process3, txt_file_nb, py_file_nb, pdf_file_nb, jpg_file_nb)
+    uptime = os.popen('uptime -p').read()[:-1]
+    user_nb = len(set(u.name for u in psutil.users()))
+
+    cpu_frequency = round(psutil.cpu_freq().current / 1000, 2)
+    cpu_usage = psutil.cpu_percent(interval=1) 
+
+    ram_usage_nb = round(psutil.virtual_memory().used / (1024**3), 1)
+    ram_usage_percentage = psutil.virtual_memory().percent
+
+    ip_address = socket.gethostbyname(socket.gethostname())
+
+    list_process_cpu_usage = get_process_cpu_usage()
+    list_process_ram_usage = get_process_ram_usage()
+    process1 = get_top3_cpu_processes(list_process_cpu_usage)[0]
+    process2 = get_top3_cpu_processes(list_process_cpu_usage)[1]
+    process3 = get_top3_cpu_processes(list_process_cpu_usage)[2]
+
+    txt_file_nb = get_specific_file_nb(".txt")
+    py_file_nb = get_specific_file_nb(".py")
+    pdf_file_nb = get_specific_file_nb(".pdf")
+    jpg_file_nb = get_specific_file_nb("jpg")
+    
+    return render_template(
+        'template.html',
+        machine_name=machine_name,
+        os_name=os_name,
+        os_boot_time=os_boot_time,
+        uptime=uptime,
+        user_nb=user_nb,
+        cpu_cores_nb=cpu_cores_nb,
+        cpu_frequency=cpu_frequency,
+        cpu_usage=cpu_usage,
+        total_ram=total_ram,
+        ram_usage_nb=ram_usage_nb,
+        ram_usage_percentage=ram_usage_percentage,
+        ip_address=ip_address,
+        process1=process1,
+        process2=process2,
+        process3=process3,
+        list_process_cpu_usage=list_process_cpu_usage,
+        list_process_ram_usage=list_process_ram_usage,
+        txt_file_nb=txt_file_nb,
+        py_file_nb=py_file_nb,
+        pdf_file_nb=pdf_file_nb,
+        jpg_file_nb=jpg_file_nb
+    )
+
+app.run(debug=True)
