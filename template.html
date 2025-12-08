@@ -34,22 +34,33 @@
 
         <!--Memory Section -->
         <section>
-
+            <h2>Mémoire</h2>
+            <p>RAM totale : {{ total_ram }}</p>
+            <p>RAM utilisé : {{ ram_usage_nb }} | {{  ram_usage_percentage }}%</p>
+            <!-- faire barre de progression -->
         </section>
 
         <!-- Network Section -->
         <section>
-
+            <h2>Réseau</h2>
+            <p>Adresse IP : {{ ip_adress }}</p>
         </section>
 
         <!-- Process Section -->
         <section>
-
+            <h2>Processus</h2>
+            <h3>Top 3 des processus les plus gourmands : </h3>
+            <ol>
+                <li>{{ process1 }}</li>
+                <li>{{ process2 }}</li>
+                <li>{{ process3 }}</li>
+            </ol>
         </section>
 
         <!-- File Section -->
         <section>
-
+            <h2>Fichiers</h2>
+            
         </section>
     </main>
     <footer>
