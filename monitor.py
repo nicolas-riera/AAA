@@ -6,6 +6,7 @@ import socket
 import os
 import psutil
 from datetime import *
+import subprocess
 
 app = Flask(__name__)
 
@@ -36,10 +37,6 @@ def get_specific_file_nb(extension):
             except Exception:
                 continue
     return (count)
-
-def afficher_l_heure():
-    maintenant = datetime.now().strftime("%H:%M:%S")
-    return render_template('template.html', heure=maintenant) 
 
 def get_process_cpu_usage():
     processes = []
@@ -102,7 +99,14 @@ def home():
     uptime = os.popen('uptime -p').read()[:-1]
     user_nb = len(set(u.name for u in psutil.users()))
 
-    cpu_frequency = round(psutil.cpu_freq().current / 1000, 2)
+    try :
+        cpu_frequency = round(subprocess.check_output("lscpu | grep 'MHz'", shell=True).decode().strip() / 1000, 2)
+    except:
+        try : 
+            cpu_frequency = round(psutil.cpu_freq().current / 1000, 2)
+        except :
+            cpu_frequency = "N/A"
+
     cpu_usage = psutil.cpu_percent(interval=1) 
 
     ram_usage_nb = round(psutil.virtual_memory().used / (1024**3), 1)
