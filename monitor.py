@@ -8,8 +8,11 @@ def get_users():
     try:
         with open("/etc/passwd", "r") as f:
             for line in f:
-                username = line.split(":")[0]
-                users.append(username)
+                parts = line.split(":")
+                username = parts[0]
+                uid = int(parts[2])
+                if uid >= 1000:
+                    users.append(username)
     except:
         pass
     return len(users)
