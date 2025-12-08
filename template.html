@@ -28,14 +28,14 @@
         <section>
             <h2>CPU</h2>
             <p>Nombre de cœurs : {{ cpu_cores_nb }}</p>
-            <p>Fréquence : {{ cpu_frequency }} GHz</p>
+            <p>Fréquence : {{ cpu_frequency }}GHz</p>
             <p>Utilisation : {{ cpu_usage }}%</p>
         </section>
 
         <!--Memory Section -->
         <section>
             <h2>Mémoire</h2>
-            <p>RAM totale : {{ total_ram }}</p>
+            <p>RAM totale : {{ total_ram }}Go</p>
             <p>RAM utilisé : {{ ram_usage_nb }} | {{  ram_usage_percentage }}%</p>
             <!-- faire barre de progression -->
         </section>
@@ -60,7 +60,10 @@
         <!-- File Section -->
         <section>
             <h2>Fichiers</h2>
-            
+            <p>{{ txt_file_nb }} fichiers .txt</p>
+            <p>{{ py_file_nb }} fichiers .py</p>
+            <p>{{ pdf_file_nb }} fichiers .pdf</p>
+            <p>{{ jpg_file_nb }} fichiers .jpg</p>
         </section>
     </main>
     <footer>
