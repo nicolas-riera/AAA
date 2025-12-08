@@ -24,7 +24,7 @@ def get_users():
     return len(users)
 
 def get_txt_file_nb():
-    START_DIR = "/"
+    START_DIR = "/home/"
     extension = ".txt"
     count = 0
     for root, dirs, files in os.walk(START_DIR):
@@ -37,7 +37,7 @@ def get_txt_file_nb():
     return (count)
 
 def get_py_file_nb():
-    START_DIR = "/"
+    START_DIR = "/home/"
     extension = ".py"
     count = 0
     for root, dirs, files in os.walk(START_DIR):
@@ -50,7 +50,7 @@ def get_py_file_nb():
     return (count)
 
 def get_pdf_file_nb():
-    START_DIR = "/"
+    START_DIR = "/home/"
     extension = ".pdf"
     count = 0
     for root, dirs, files in os.walk(START_DIR):
@@ -63,7 +63,7 @@ def get_pdf_file_nb():
     return (count)
 
 def get_jpg_file_nb():
-    START_DIR = "/"
+    START_DIR = "/home/"
     extension = ".jpg"
     count = 0
     for root, dirs, files in os.walk(START_DIR):
@@ -75,12 +75,14 @@ def get_jpg_file_nb():
                 continue
     return (count)
 
+
 # Variables
+
 machine_name = socket.gethostname()
 os_name = platform.platform()
 os_boot_time = datetime.fromtimestamp(psutil.boot_time())
 uptime = os.popen('uptime -p').read()[:-1]
-user_nb = get_users()
+user_nb = len(set(u.name for u in psutil.users()))
 
 cpu_cores_nb = os.cpu_count()
 cpu_frequency = None
