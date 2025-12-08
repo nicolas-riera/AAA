@@ -100,7 +100,10 @@ def home():
     user_nb = len(set(u.name for u in psutil.users()))
 
     try :
-        cpu_frequency = round(subprocess.check_output("lscpu | grep 'MHz'", shell=True).decode().strip() / 1000, 2)
+        output = subprocess.check_output("lscpu | grep 'MHz'", shell=True).decode().strip()
+    
+        cpu_mhz = float(output.split(":")[1].strip())
+        cpu_frequency = round(cpu_mhz / 1000, 2)
     except:
         try : 
             cpu_frequency = round(psutil.cpu_freq().current / 1000, 2)
