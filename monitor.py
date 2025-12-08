@@ -12,20 +12,6 @@ app = Flask(__name__)
 
 # Functions
 
-def get_users():
-    users = []
-    try:
-        with open("/etc/passwd", "r") as f:
-            for line in f:
-                parts = line.split(":")
-                username = parts[0]
-                uid = int(parts[2])
-                if uid >= 1000 and uid != 65534:
-                    users.append(username)
-    except:
-        pass
-    return len(users)
-
 def get_specific_file_nb(extension):
     START_DIR = "/home/"
     count = 0
@@ -76,7 +62,7 @@ def get_process_ram_usage():
 
 def get_top3_cpu_processes(processes):
     processes_sorted = sorted(processes, key=lambda p: p["cpu_percent"], reverse=True)
-    return processes_sorted[:3]
+    return [f"PID: {p['pid']}, Nom: {p['name']}, CPU: {p['cpu_percent']}%, RAM: {p['memory_percent']}%" for p in processes_sorted[:3]]
 
 # Variables that can be calculed once
 
@@ -117,11 +103,23 @@ def home():
 
     ip_address = socket.gethostbyname(socket.gethostname())
 
-    list_process_cpu_usage = get_process_cpu_usage()
-    list_process_ram_usage = get_process_ram_usage()
-    process1 = get_top3_cpu_processes(list_process_cpu_usage)[0]
-    process2 = get_top3_cpu_processes(list_process_cpu_usage)[1]
-    process3 = get_top3_cpu_processes(list_process_cpu_usage)[2]
+    process_list = []
+    
+    for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent']):
+        try:
+            p_info = proc.info
+            
+            p_info['cpu_percent'] = round(p_info['cpu_percent'] or 0, 1)
+            p_info['memory_percent'] = round(p_info['memory_percent'] or 0, 1)
+            
+            process_list.append(p_info)
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            pass
+    
+    process_list = sorted(process_list, key=lambda p: p['memory_percent'], reverse=True)
+    process1 = get_top3_cpu_processes(process_list)[0]
+    process2 = get_top3_cpu_processes(process_list)[1]
+    process3 = get_top3_cpu_processes(process_list)[2]
 
     txt_file_nb = get_specific_file_nb(".txt")
     py_file_nb = get_specific_file_nb(".py")
@@ -145,12 +143,11 @@ def home():
         process1=process1,
         process2=process2,
         process3=process3,
-        list_process_cpu_usage=list_process_cpu_usage,
-        list_process_ram_usage=list_process_ram_usage,
         txt_file_nb=txt_file_nb,
         py_file_nb=py_file_nb,
         pdf_file_nb=pdf_file_nb,
-        jpg_file_nb=jpg_file_nb
+        jpg_file_nb=jpg_file_nb,
+        process_list=process_list
     )
 
 app.run(debug=True)

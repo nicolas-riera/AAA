@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="refresh" content="5">
-
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
@@ -23,7 +22,7 @@
             <p>Système d'exploitation : {{ os_name }}</p>
             <p>Heure de démarrage : {{ os_boot_time }}</p>
             <p>Uptime : {{ uptime }}</p>
-            <p>Nombre d'utilisateurs : {{ user_nb }}</p>
+            <p>Nombre d'utilisateurs connectés : {{ user_nb }}</p>
         </section>
 
         <!-- CPU Section -->
@@ -68,10 +67,37 @@
         </section>
 
         <!-- Process list Section -->
-        <section class="list_process">
-            <h2>Processus</h2>
+        <section class="list-process">
+            <h2>Processus</h2>  
+            <table class="process-table">
+                <thead>
+                    <tr>
+                        <th>PID</th>
+                        <th>Nom</th>
+                        <th>CPU (%)</th>
+                        <th>RAM (%)</th>
+                        
 
+                </thead>
+                <tbody>
+                    {% for process in process_list %}
+                    {% if loop.index <= 20 %} <tr>
+                        <td>{{ process.pid }}</td>
+                        <td>{{ process.name }}</td>
 
+                        <td class="{% if process.cpu_percent >= 81 %}high-usage{% elif process.cpu_percent >= 50 %}medium-usage{% endif %}">
+                            {{ process.cpu_percent }}%
+                        </td>
+
+                        <td class="{% if process.memory_percent > 81 %}high-usage{% elif process.memory_percent > 20 %}medium-usage{% endif %}">
+                            {{ process.memory_percent }}%
+                        </td>
+
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                </tbody>
+            </table>
         </section>
     </main>
     <footer>
