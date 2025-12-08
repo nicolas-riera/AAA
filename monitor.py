@@ -9,6 +9,9 @@ from datetime import *
 import subprocess
 
 app = Flask(__name__)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+TEMPLATE_FILE = os.path.join(BASE_DIR, "templates", "template.html")
+STATIC_FILE = os.path.join(BASE_DIR, "index.html")
 
 # Functions
 
@@ -74,14 +77,9 @@ cpu_cores_nb = os.cpu_count()
 
 total_ram = round(psutil.virtual_memory().total / (1024**3), 1)
 
-# Flask things
+# Variables that needs to be refreshed
 
-@app.route('/') 
-
-def home():
-    
-    # Variables that needs to be refreshed
-
+def get_dashboard_vars():
     uptime = os.popen('uptime -p').read()[:-1]
     user_nb = len(set(u.name for u in psutil.users()))
 
@@ -125,29 +123,48 @@ def home():
     py_file_nb = get_specific_file_nb(".py")
     pdf_file_nb = get_specific_file_nb(".pdf")
     jpg_file_nb = get_specific_file_nb("jpg")
-    
-    return render_template(
-        'template.html',
-        machine_name=machine_name,
-        os_name=os_name,
-        os_boot_time=os_boot_time,
-        uptime=uptime,
-        user_nb=user_nb,
-        cpu_cores_nb=cpu_cores_nb,
-        cpu_frequency=cpu_frequency,
-        cpu_usage=cpu_usage,
-        total_ram=total_ram,
-        ram_usage_nb=ram_usage_nb,
-        ram_usage_percentage=ram_usage_percentage,
-        ip_address=ip_address,
-        process1=process1,
-        process2=process2,
-        process3=process3,
-        txt_file_nb=txt_file_nb,
-        py_file_nb=py_file_nb,
-        pdf_file_nb=pdf_file_nb,
-        jpg_file_nb=jpg_file_nb,
-        process_list=process_list
-    )
 
-app.run(debug=True)
+    return {
+        "machine_name": machine_name,
+        "os_name": os_name,
+        "os_boot_time": os_boot_time,
+        "uptime": uptime,
+        "user_nb": user_nb,
+        "cpu_cores_nb": cpu_cores_nb,
+        "cpu_frequency": cpu_frequency,
+        "cpu_usage": cpu_usage,
+        "total_ram": total_ram,
+        "ram_usage_nb": ram_usage_nb,
+        "ram_usage_percentage": ram_usage_percentage,
+        "ip_address": ip_address,
+        "process1": process1,
+        "process2": process2,
+        "process3": process3,
+        "txt_file_nb": txt_file_nb,
+        "py_file_nb": py_file_nb,
+        "pdf_file_nb": pdf_file_nb,
+        "jpg_file_nb": jpg_file_nb,
+        "process_list": process_list
+    }
+
+# Flask things
+
+@app.route('/') 
+
+def home():
+    return render_template('template.html', **get_dashboard_vars())
+
+def generate_static_html():
+    vars = get_dashboard_vars()
+    with open(TEMPLATE_FILE, "r", encoding="utf-8") as f:
+        template_content = f.read()
+        
+    with app.app_context():
+        with app.test_request_context('/'):
+            rendered = render_template_string(template_content, **vars)
+
+    with open(STATIC_FILE, "w", encoding="utf-8") as f:
+        f.write(rendered)
+
+generate_static_html()
+app.run(debug=False)
