@@ -11,7 +11,7 @@ def get_users():
                 parts = line.split(":")
                 username = parts[0]
                 uid = int(parts[2])
-                if uid >= 1000:
+                if uid >= 1000 and uid != 65534:
                     users.append(username)
     except:
         pass
