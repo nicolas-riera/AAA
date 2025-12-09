@@ -77,18 +77,18 @@ def get_network_speed(dt=1.0):
     sent1, recv1 = psutil.net_io_counters(pernic=True)[interface][:2]
     t1 = time.time()
 
-    ul_kB_s = (sent1 - sent0) / (t1 - t0) / 1024.0
-    dl_kB_s = (recv1 - recv0) / (t1 - t0) / 1024.0
+    ul_kB_s = ((sent1 - sent0) / (t1 - t0) / 1024.0)*8
+    dl_kB_s = ((recv1 - recv0) / (t1 - t0) / 1024.0)*8
 
     if ul_kB_s > 1000:
-        ul_kB_s = str(round((ul_kB_s / 1000), 1)) + " Mo/s"
+        ul_kB_s = str(round((ul_kB_s / 1000), 1)) + " MB/s"
     else:
-        ul_kB_s = str(round(ul_kB_s, 1)) + " Ko/s"
+        ul_kB_s = str(round(ul_kB_s, 1)) + " KB/s"
 
     if dl_kB_s > 1000:
-        dl_kB_s = str(round((dl_kB_s / 1000), 1)) + " Mo/s"
+        dl_kB_s = str(round((dl_kB_s / 1000), 1)) + " MB/s"
     else:
-        dl_kB_s = str(round(dl_kB_s, 1)) + " Ko/s"
+        dl_kB_s = str(round(dl_kB_s, 1)) + " KB/s"
 
     return ul_kB_s, dl_kB_s
 
