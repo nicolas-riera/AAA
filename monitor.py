@@ -106,11 +106,6 @@ cpu_cores_nb = os.cpu_count()
 
 total_ram = round(psutil.virtual_memory().total / (1024**3), 1)
 
-txt_file_nb = get_specific_file_nb(".txt")
-py_file_nb = get_specific_file_nb(".py")
-pdf_file_nb = get_specific_file_nb(".pdf")
-jpg_file_nb = get_specific_file_nb(".jpg")
-
 # Variables that needs to be refreshed
 
 def get_dashboard_vars():
@@ -153,6 +148,11 @@ def get_dashboard_vars():
     process1 = get_top3_cpu_processes(process_list)[0]
     process2 = get_top3_cpu_processes(process_list)[1]
     process3 = get_top3_cpu_processes(process_list)[2]
+
+    txt_file_nb = get_specific_file_nb(".txt")
+    py_file_nb = get_specific_file_nb(".py")
+    pdf_file_nb = get_specific_file_nb(".pdf")
+    jpg_file_nb = get_specific_file_nb(".jpg")
 
     return {
         "machine_name": machine_name,
