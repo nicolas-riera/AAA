@@ -39,13 +39,14 @@
             <h2>Mémoire</h2>
             <p>RAM totale : {{ total_ram }} Go</p>
             <p>RAM utilisé : {{ ram_usage_nb }} Go | {{ ram_usage_percentage }}%</p>
-            <!-- faire barre de progression -->
+            <progress  id="progress_ram" max="100" value="{{ ram_usage_percentage }}"></progress>
         </section>
 
         <!-- Network Section -->
         <section>
             <h2>Réseau</h2>
             <p>Adresse IP : {{ ip_address }}</p>
+            <p>DL : {{ dl_speed }} | UP : {{ up_speed }}</p>
         </section>
 
         <!-- Process Section -->

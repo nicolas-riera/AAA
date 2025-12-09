@@ -7,6 +7,7 @@ import os
 import psutil
 from datetime import *
 import subprocess
+import time
 
 app = Flask(__name__)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -63,6 +64,35 @@ def get_process_ram_usage():
             continue
     return processes
 
+def get_network_speed(dt=1.0):
+
+    counters = psutil.net_io_counters(pernic=True)
+    interface = max(counters, key=lambda nic: counters[nic].bytes_recv + counters[nic].bytes_sent)
+
+    sent0, recv0 = psutil.net_io_counters(pernic=True)[interface][:2]
+    t0 = time.time()
+
+    time.sleep(dt)
+
+    sent1, recv1 = psutil.net_io_counters(pernic=True)[interface][:2]
+    t1 = time.time()
+    print(t1)
+
+    ul_kB_s = (sent1 - sent0) / (t1 - t0) / 1024.0
+    dl_kB_s = (recv1 - recv0) / (t1 - t0) / 1024.0
+
+    if ul_kB_s > 1000:
+        ul_kB_s = str(round((ul_kB_s / 1000), 1)) + " MB/s"
+    else:
+        ul_kB_s = str(round(ul_kB_s, 1)) + " KB/s"
+
+    if dl_kB_s > 1000:
+        dl_kB_s = str(round((dl_kB_s / 1000), 1)) + " MB/s"
+    else:
+        dl_kB_s = str(round(dl_kB_s, 1)) + " KB/s"
+
+    return ul_kB_s, dl_kB_s
+
 def get_top3_cpu_processes(processes):
     processes_sorted = sorted(processes, key=lambda p: p["cpu_percent"], reverse=True)
     return [f"PID: {p['pid']}, Nom: {p['name']}, CPU: {p['cpu_percent']}%, RAM: {p['memory_percent']}%" for p in processes_sorted[:3]]
@@ -100,6 +130,7 @@ def get_dashboard_vars():
     ram_usage_percentage = psutil.virtual_memory().percent
 
     ip_address = socket.gethostbyname(socket.gethostname())
+    up_speed, dl_speed = get_network_speed()
 
     process_list = []
     
@@ -137,6 +168,8 @@ def get_dashboard_vars():
         "ram_usage_nb": ram_usage_nb,
         "ram_usage_percentage": ram_usage_percentage,
         "ip_address": ip_address,
+        "up_speed" : up_speed,
+        "dl_speed" : dl_speed,
         "process1": process1,
         "process2": process2,
         "process3": process3,
