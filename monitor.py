@@ -19,7 +19,7 @@ STATIC_FILE = os.path.join(BASE_DIR, "index.html")
 def get_specific_file_nb(extension):
     START_DIR = "/home/"
     count = 0
-    for files in os.walk(START_DIR):
+    for root, dirs, files in os.walk(START_DIR):
         for f in files:
             try:
                 if os.path.splitext(f)[1].lower() == extension:
