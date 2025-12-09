@@ -19,7 +19,7 @@ STATIC_FILE = os.path.join(BASE_DIR, "index.html")
 def get_specific_file_nb(extension):
     START_DIR = "/home/"
     count = 0
-    for root, dirs, files in os.walk(START_DIR):
+    for files in os.walk(START_DIR):
         for f in files:
             try:
                 if os.path.splitext(f)[1].lower() == extension:
@@ -76,7 +76,6 @@ def get_network_speed(dt=1.0):
 
     sent1, recv1 = psutil.net_io_counters(pernic=True)[interface][:2]
     t1 = time.time()
-    print(t1)
 
     ul_kB_s = (sent1 - sent0) / (t1 - t0) / 1024.0
     dl_kB_s = (recv1 - recv0) / (t1 - t0) / 1024.0
@@ -106,6 +105,11 @@ os_boot_time = datetime.fromtimestamp(psutil.boot_time())
 cpu_cores_nb = os.cpu_count()
 
 total_ram = round(psutil.virtual_memory().total / (1024**3), 1)
+
+txt_file_nb = get_specific_file_nb(".txt")
+py_file_nb = get_specific_file_nb(".py")
+pdf_file_nb = get_specific_file_nb(".pdf")
+jpg_file_nb = get_specific_file_nb(".jpg")
 
 # Variables that needs to be refreshed
 
@@ -149,11 +153,6 @@ def get_dashboard_vars():
     process1 = get_top3_cpu_processes(process_list)[0]
     process2 = get_top3_cpu_processes(process_list)[1]
     process3 = get_top3_cpu_processes(process_list)[2]
-
-    txt_file_nb = get_specific_file_nb(".txt")
-    py_file_nb = get_specific_file_nb(".py")
-    pdf_file_nb = get_specific_file_nb(".pdf")
-    jpg_file_nb = get_specific_file_nb("jpg")
 
     return {
         "machine_name": machine_name,
