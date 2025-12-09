@@ -39,6 +39,10 @@ section {
     background-color: var(--block-color);
 }
 
+#progress_ram {
+    width: 100%;
+}
+
 .list-process {
     grid-column: 1/3;
 }
