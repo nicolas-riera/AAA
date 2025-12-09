@@ -81,14 +81,14 @@ def get_network_speed(dt=1.0):
     dl_kB_s = (recv1 - recv0) / (t1 - t0) / 1024.0
 
     if ul_kB_s > 1000:
-        ul_kB_s = str(round((ul_kB_s / 1000), 1)) + " MB/s"
+        ul_kB_s = str(round((ul_kB_s / 1000), 1)) + " Mo/s"
     else:
-        ul_kB_s = str(round(ul_kB_s, 1)) + " KB/s"
+        ul_kB_s = str(round(ul_kB_s, 1)) + " Ko/s"
 
     if dl_kB_s > 1000:
-        dl_kB_s = str(round((dl_kB_s / 1000), 1)) + " MB/s"
+        dl_kB_s = str(round((dl_kB_s / 1000), 1)) + " Mo/s"
     else:
-        dl_kB_s = str(round(dl_kB_s, 1)) + " KB/s"
+        dl_kB_s = str(round(dl_kB_s, 1)) + " Ko/s"
 
     return ul_kB_s, dl_kB_s
 
