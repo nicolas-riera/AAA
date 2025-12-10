@@ -112,7 +112,7 @@
                         <th>RAM (%)</th>
                 </thead>
                 <tbody>
-                    {% for process in process_list %}
+                    {% for process in process_list[:10] %}
                     <tr>
                         <td>{{ process.pid }}</td>
                         <td>{{ process.name }}</td>
@@ -131,6 +131,9 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <div class="btn-container">
+                <a href="{{ base_process_url }}" class="btn">Voir tout les processus</a>
+            </div>
         </section>
     </main>
     <footer>

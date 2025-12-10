@@ -231,11 +231,19 @@ def get_dashboard_vars():
     }
 
 # Flask things
+@app.route('/process')
+
+def process_page():
+    vars = {"machine_name": machine_name, "process_list": sorted(get_process_list(), key=lambda p: p["name"].lower())}
+    vars['base_process_url'] = '/'
+    return render_template('process.html', **vars)
 
 @app.route('/') 
 
 def home():
-    return render_template('template.html', **get_dashboard_vars())
+    vars = get_dashboard_vars()
+    vars['base_process_url'] = "process"
+    return render_template('template.html', **vars)
 
 def generate_static_html():
     vars = get_dashboard_vars()
@@ -243,11 +251,17 @@ def generate_static_html():
         template_content = f.read()
         
     with app.app_context():
+        vars['base_process_url'] = 'process.html'
         with app.test_request_context('/'):
-            rendered = render_template_string(template_content, **vars)
-
-    with open(STATIC_FILE, "w", encoding="utf-8") as f:
-        f.write(rendered)
+            rendered_index = render_template_string(template_content, **vars)
+        with open(os.path.join(BASE_DIR, "index.html"), "w", encoding="utf-8") as f:
+            f.write(rendered_index)
+        
+        vars['base_process_url'] = 'index.html' 
+        with app.test_request_context('/process'):
+            rendered_process = render_template('process.html', **vars)
+        with open(os.path.join(BASE_DIR, "process.html"), "w", encoding="utf-8") as f:
+            f.write(rendered_process)
 
 generate_static_html()
 app.run(debug=False)

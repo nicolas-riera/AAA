@@ -120,6 +120,28 @@ li {
     font-weight: bold;
 }
 
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: gray;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn:hover {
+    background-color: #6e6e6e;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+    padding-bottom: 5px;
+}
+
 @media only screen and (max-width: 850px) {
     main {
         grid-template-columns: 1fr;
