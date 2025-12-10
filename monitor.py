@@ -17,17 +17,23 @@ STATIC_FILE = os.path.join(BASE_DIR, "index.html")
 
 # Functions
 
-def get_specific_file_nb(extension):
+def get_specific_file_data(extension):
     START_DIR = "/home/"
     count = 0
+    total_size = 0
+
     for root, dirs, files in os.walk(START_DIR):
         for f in files:
             try:
-                if os.path.splitext(f)[1].lower() == extension:
+                if os.path.splitext(f)[1].lower() == extension.lower():
                     count += 1
+                    full_path = os.path.join(root, f)
+                    total_size += os.path.getsize(full_path)
             except Exception:
                 continue
-    return (count)
+
+    return count, total_size
+
 
 def get_process_list():
     cpu_count = psutil.cpu_count(logical=True)
@@ -179,17 +185,17 @@ def get_dashboard_vars():
     total_storage, used_storage, free_storage = shutil.disk_usage("/")
     used_storage_percent = round((used_storage * 100) / total_storage, 2)
 
-    txt_file_nb = get_specific_file_nb(".txt")
-    py_file_nb = get_specific_file_nb(".py")
-    pdf_file_nb = get_specific_file_nb(".pdf")
-    jpg_file_nb = get_specific_file_nb(".jpg")
-    png_file_nb = get_specific_file_nb(".png")
-    docx_file_nb = get_specific_file_nb(".docx")
-    xlsx_file_nb = get_specific_file_nb(".xlsx")
-    pptx_file_nb = get_specific_file_nb(".pptx")
-    mp3_file_nb = get_specific_file_nb(".mp3")
-    mp4_file_nb = get_specific_file_nb(".mp4")
-    zip_file_nb = get_specific_file_nb(".zip")
+    txt_file_nb, txt_file_size = get_specific_file_data(".txt")
+    py_file_nb, py_file_size = get_specific_file_data(".py")
+    pdf_file_nb, pdf_file_size = get_specific_file_data(".pdf")
+    jpg_file_nb, jpg_file_size = get_specific_file_data(".jpg")
+    png_file_nb, png_file_size = get_specific_file_data(".png")
+    docx_file_nb, docx_file_size = get_specific_file_data(".docx")
+    xlsx_file_nb, xlsx_file_size = get_specific_file_data(".xlsx")
+    pptx_file_nb, pptx_file_size = get_specific_file_data(".pptx")
+    mp3_file_nb, mp3_file_size = get_specific_file_data(".mp3")
+    mp4_file_nb, mp4_file_size = get_specific_file_data(".mp4")
+    zip_file_nb, zip_file_size = get_specific_file_data(".zip")
 
     pie_chart_css_value = generate_pie_chart_css(txt_file_nb, py_file_nb, pdf_file_nb, jpg_file_nb, png_file_nb, docx_file_nb, xlsx_file_nb, pptx_file_nb, mp3_file_nb, mp4_file_nb, zip_file_nb)
     cores_usage =  psutil.cpu_percent(interval=0.5, percpu=True)
@@ -228,6 +234,17 @@ def get_dashboard_vars():
         "mp3_file_nb": mp3_file_nb,
         "mp4_file_nb": mp4_file_nb,
         "zip_file_nb": zip_file_nb,
+        "txt_file_size": txt_file_size,
+        "py_file_size": py_file_size,
+        "pdf_file_size": pdf_file_size,
+        "jpg_file_size": jpg_file_size,
+        "png_file_size": png_file_size,
+        "docx_file_size": docx_file_size,
+        "xlsx_file_size": xlsx_file_size,
+        "pptx_file_size": pptx_file_size,
+        "mp3_file_size": mp3_file_size,
+        "mp4_file_size": mp4_file_size,
+        "zip_file_size": zip_file_size,
         "process_list": process_list,
         "pie_chart_css_value": pie_chart_css_value
     }
