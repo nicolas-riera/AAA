@@ -10,7 +10,7 @@ Ce projet permet de visualiser des informations essentielles telles que l’util
 
 Avant d’utiliser ce projet, assurez-vous d’avoir installé :
 
-- Une machine virtuelle Linux (Ubuntu, Debian ou équivalent)
+- Une machine virtuelle Linux (Ubuntu, Debian ou équivalent), une machine physique fait l'affaire aussi
 - Python 3.8+
 - Pip (gestionnaire de packages Python)
 - Navigateur web moderne (Chrome, Firefox, Edge)
