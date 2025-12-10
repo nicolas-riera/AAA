@@ -53,6 +53,7 @@ section {
     border-radius: 50%;
     border: 2px solid white;
     margin-bottom: 10px;
+    flex-shrink: 0;
 }
 
 li {
@@ -164,6 +165,12 @@ li {
     color: #000000;
     font-weight: 500;
     white-space: nowrap;
+}
+
+@media only screen and (((min-width: 851px) and (max-width: 975px)) or (max-width: 500px)) {
+    .files-container {
+        flex-direction: column;
+    }
 }
 
 @media only screen and (max-width: 850px) {
