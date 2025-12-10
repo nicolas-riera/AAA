@@ -50,6 +50,7 @@ Pour un rendu statique, ouvrez le fichier `index.html` après avoir lancer le sc
 - Surveillance des informations systèmes principales
 - Surveillance du CPU (utilisation en % et fréquence)
 - Surveillance de la mémoire RAM
+- Surveillance du stockage disque
 - Surveillance des processsus
 - Interface web simple et responsive
 - Mise à jour automatique des statistiques en temps réel
