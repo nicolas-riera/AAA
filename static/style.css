@@ -1,6 +1,6 @@
-:root{
-    --background-color : rgb(57, 57, 57);
-    --block-color : rgb(95, 94, 94);
+:root {
+    --background-color: rgb(57, 57, 57);
+    --block-color: rgb(95, 94, 94);
 }
 
 body {
@@ -20,7 +20,8 @@ h1 {
     text-align: center;
 }
 
-h2 {
+h2,
+h3 {
     text-decoration: underline;
     text-align: center;
 }
@@ -39,18 +40,42 @@ section {
     background-color: var(--block-color);
 }
 
-#progress_ram, #progress_cpu {
+#progress_ram,
+#progress_cpu,
+#progress_storage {
     width: 100%;
 }
 
-li { 
+.files-container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.pie-chart {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 2px solid white;
+    margin-bottom: 10px;
+}
+
+li {
     padding: 3px;
 }
 
 .list-process {
     grid-column: 1/3;
-    overflow-x: auto; 
-    display: block;  
+    overflow-x: auto;
+    display: block;
+}
+
+.list-process ol {
+    padding: 0;
+}
+
+.list-process li {
+    text-align: center;
+    list-style-position: inside;
 }
 
 .process-table {
@@ -71,13 +96,13 @@ li {
 .process-table td {
     padding: 12px 15px;
     border-bottom: 1px solid #dddddd;
-    word-wrap: break-word; 
+    word-wrap: break-word;
     overflow-wrap: break-word;
 }
 
-.process-table th:nth-child(2), 
+.process-table th:nth-child(2),
 .process-table td:nth-child(2) {
-    width: 40%; 
+    width: 40%;
 }
 
 .medium-usage {
@@ -101,11 +126,11 @@ li {
     }
 
     .list-process {
-    grid-column: 1/1;
+        grid-column: 1/1;
     }
 
     .process-table {
-    width: auto;
+        width: auto;
     }
 
 }

@@ -8,6 +8,7 @@ import psutil
 from datetime import *
 import subprocess
 import time
+import shutil
 
 app = Flask(__name__)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -60,7 +61,7 @@ def get_process_list():
 
     return process_list
 
-def get_network_speed(dt=1.0):
+def get_network_speed():
 
     counters = psutil.net_io_counters(pernic=True)
     interface = max(counters, key=lambda nic: counters[nic].bytes_recv + counters[nic].bytes_sent)
@@ -68,7 +69,7 @@ def get_network_speed(dt=1.0):
     sent0, recv0 = psutil.net_io_counters(pernic=True)[interface][:2]
     t0 = time.time()
 
-    time.sleep(dt)
+    time.sleep(1)
 
     sent1, recv1 = psutil.net_io_counters(pernic=True)[interface][:2]
     t1 = time.time()
@@ -94,6 +95,70 @@ def get_top3_cpu_processes(process_list):
         f"PID: {p['pid']}, Nom: {p['name']}, CPU: {p['cpu_percent']}%, RAM: {p['memory_percent']}%"
         for p in top3
     ]
+
+def generate_pie_chart_css(txt_nb, py_nb, pdf_nb, jpg_nb):
+    files_data = [
+        {"count": txt_nb, "color": "blue"},  
+        {"count": py_nb,  "color": "green"},  
+        {"count": pdf_nb, "color": "yellow"},
+        {"count": jpg_nb, "color": "orange"}  
+    ]
+
+    total = sum(item['count'] for item in files_data)
+
+    if total == 0:
+        return "gray 0% 100%"
+
+    current_start = 0
+    gradient_parts = []
+    
+    for item in files_data:
+        count = item['count']
+        color = item['color']
+        
+        percent = (count / total) * 100
+        current_end = current_start + percent
+        
+        part = f"{color} {current_start:.2f}% {current_end:.2f}%"
+        gradient_parts.append(part)
+        
+        current_start = current_end
+
+    css_gradient_value = f"brown, {', '.join(gradient_parts)}"
+
+    return css_gradient_value
+
+def get_all_threads_cpu_percent():
+
+    threads_usage = []
+
+    for proc in psutil.process_iter():
+        try:
+            proc.cpu_percent(None)
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+
+    time.sleep(1)
+
+    for proc in psutil.process_iter():
+        try:
+            for thread in proc.threads():
+                tid = thread.id
+                cpu = thread.user_time + thread.system_time  
+                threads_usage.append({
+                    "pid": proc.pid,
+                    "tid": tid,
+                    "cpu_percent": proc.cpu_percent(None) 
+                })
+        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            continue
+
+    cpu_count = psutil.cpu_count()
+    for t in threads_usage:
+        t["cpu_percent"] = min(t["cpu_percent"] / cpu_count, 100.0)
+
+    return threads_usage
+
 
 # Variables that can be calculed once
 
@@ -135,6 +200,8 @@ def get_dashboard_vars():
     process2 = get_top3_cpu_processes(process_list)[1]
     process3 = get_top3_cpu_processes(process_list)[2]
 
+    total_storage, used_storage, free_storage = shutil.disk_usage("/")
+
     txt_file_nb = get_specific_file_nb(".txt")
     py_file_nb = get_specific_file_nb(".py")
     pdf_file_nb = get_specific_file_nb(".pdf")
@@ -158,11 +225,15 @@ def get_dashboard_vars():
         "process1": process1,
         "process2": process2,
         "process3": process3,
+        "total_storage": total_storage // (2**30),
+        "used_storage": used_storage // (2**30),
+        "free_storage": free_storage // (2**30),
         "txt_file_nb": txt_file_nb,
         "py_file_nb": py_file_nb,
         "pdf_file_nb": pdf_file_nb,
         "jpg_file_nb": jpg_file_nb,
-        "process_list": process_list
+        "process_list": process_list,
+        "pie_chart_css_value": generate_pie_chart_css(txt_file_nb, py_file_nb, pdf_file_nb, jpg_file_nb)
     }
 
 # Flask things

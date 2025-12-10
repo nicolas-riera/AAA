@@ -33,7 +33,7 @@
             <p>Nombre de cœurs : {{ cpu_cores_nb }}</p>
             <p>Fréquence : {{ cpu_frequency }} GHz</p>
             <p>Utilisation : {{ cpu_usage }}%</p>
-            <progress  id="progress_cpu" max="100" value="{{ cpu_usage }}"></progress>
+            <progress id="progress_cpu" max="100" value="{{ cpu_usage }}"></progress>
         </section>
 
         <!--Memory Section -->
@@ -41,7 +41,7 @@
             <h2>Mémoire</h2>
             <p>RAM totale : {{ total_ram }} Go</p>
             <p>RAM utilisé : {{ ram_usage_nb }} Go | {{ ram_usage_percentage }}%</p>
-            <progress  id="progress_ram" max="100" value="{{ ram_usage_percentage }}"></progress>
+            <progress id="progress_ram" max="100" value="{{ ram_usage_percentage }}"></progress>
         </section>
 
         <!-- Network Section -->
@@ -51,28 +51,41 @@
             <p>DL : {{ dl_speed }} | UP : {{ up_speed }}</p>
         </section>
 
-        <!-- Process Section -->
+        <!-- Storage Section -->
         <section>
-            <h2>Top 3 des processus les plus gourmands : </h2>
-            <ol>
-                <li>{{ process1 }}</li>
-                <li>{{ process2 }}</li>
-                <li>{{ process3 }}</li>
-            </ol>
+            <h2>Stockage</h2>
+            <p>Stockage total : {{ total_storage }} GiB</p>
+            <p>Stockage utilisé : {{ used_storage }} GiB</p>
+            <p>Stockage libre : {{ free_storage }} GiB</p>
+            <progress id="progress_storage" max="{{ total_storage }}" value="{{ used_storage }}"></progress>
         </section>
 
         <!-- File Section -->
         <section>
             <h2>Fichiers</h2>
-            <p>{{ txt_file_nb }} fichiers .txt</p>
-            <p>{{ py_file_nb }} fichiers .py</p>
-            <p>{{ pdf_file_nb }} fichiers .pdf</p>
-            <p>{{ jpg_file_nb }} fichiers .jpg</p>
+            <div class="files-container">
+                <div class="pie-chart" style="background: conic-gradient({{ pie_chart_css_value }});"></div>
+
+                    <div class="legend">
+                    <p><span style="color:blue">■</span> {{ txt_file_nb }} fichiers .txt</p>
+                    <p><span style="color:green">■</span> {{ py_file_nb }} fichiers .py</p>
+                    <p><span style="color:yellow">■</span> {{ pdf_file_nb }} fichiers .pdf</pstyle=style=>
+                    <p><span style="color:orange">■</span> {{ jpg_file_nb }} fichiers .jpg</p>
+                </div>
+            </div>
         </section>
 
         <!-- Process list Section -->
         <section class="list-process">
-            <h2>Processus</h2>  
+            <h2>Processus</h2>
+
+            <h3>Top 3 des processus les plus gourmands : </h3>
+            <ol>
+                <li>{{ process1 }}</li>
+                <li>{{ process2 }}</li>
+                <li>{{ process3 }}</li>
+            </ol>
+
             <table class="process-table">
                 <thead>
                     <tr>
@@ -80,8 +93,6 @@
                         <th>Nom</th>
                         <th>CPU (%)</th>
                         <th>RAM (%)</th>
-                        
-
                 </thead>
                 <tbody>
                     {% for process in process_list %}
@@ -89,16 +100,18 @@
                         <td>{{ process.pid }}</td>
                         <td>{{ process.name }}</td>
 
-                        <td class="{% if process.cpu_percent >= 81 %}high-usage{% elif process.cpu_percent >= 50 %}medium-usage{% endif %}">
+                        <td
+                            class="{% if process.cpu_percent >= 81 %}high-usage{% elif process.cpu_percent >= 50 %}medium-usage{% endif %}">
                             {{ process.cpu_percent }}%
                         </td>
 
-                        <td class="{% if process.memory_percent > 81 %}high-usage{% elif process.memory_percent > 20 %}medium-usage{% endif %}">
+                        <td
+                            class="{% if process.memory_percent > 81 %}high-usage{% elif process.memory_percent > 20 %}medium-usage{% endif %}">
                             {{ process.memory_percent }}%
                         </td>
 
-                        </tr>
-                        {% endfor %}
+                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </section>
