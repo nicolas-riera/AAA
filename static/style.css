@@ -49,11 +49,12 @@ section {
 .files-container {
     display: flex;
     justify-content: space-around;
+    align-items: center;   
 }
 
 .pie-chart {
-    width: 150px;
-    height: 150px;
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
     border: 2px solid white;
     margin-bottom: 10px;
@@ -114,7 +115,7 @@ li {
     font-weight: bold;
 }
 
-@media only screen and (max-width: 730px) {
+@media only screen and (max-width: 850px) {
     main {
         grid-template-columns: 1fr;
         margin: 10px;

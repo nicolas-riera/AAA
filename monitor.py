@@ -96,12 +96,19 @@ def get_top3_cpu_processes(process_list):
         for p in top3
     ]
 
-def generate_pie_chart_css(txt_nb, py_nb, pdf_nb, jpg_nb):
+def generate_pie_chart_css(txt_nb, py_nb, pdf_nb, jpg_nb, png_nb, docx_nb, xlsx_nb, pptx_nb, mp3_nb, mp4_nb, zip_nb):
     files_data = [
         {"count": txt_nb, "color": "blue"},  
         {"count": py_nb,  "color": "green"},  
         {"count": pdf_nb, "color": "yellow"},
-        {"count": jpg_nb, "color": "orange"}  
+        {"count": jpg_nb, "color": "orange"},
+        {"count": png_nb, "color": "purple"},
+        {"count": docx_nb, "color": "red"},
+        {"count": xlsx_nb, "color": "cyan"},
+        {"count": pptx_nb, "color": "magenta"},
+        {"count": mp3_nb, "color": "lime"},
+        {"count": mp4_nb, "color": "pink"},
+        {"count": zip_nb, "color": "brown"},
     ]
 
     total = sum(item['count'] for item in files_data)
@@ -206,6 +213,15 @@ def get_dashboard_vars():
     py_file_nb = get_specific_file_nb(".py")
     pdf_file_nb = get_specific_file_nb(".pdf")
     jpg_file_nb = get_specific_file_nb(".jpg")
+    png_file_nb = get_specific_file_nb(".png")
+    docx_file_nb = get_specific_file_nb(".docx")
+    xlsx_file_nb = get_specific_file_nb(".xlsx")
+    pptx_file_nb = get_specific_file_nb(".pptx")
+    mp3_file_nb = get_specific_file_nb(".mp3")
+    mp4_file_nb = get_specific_file_nb(".mp4")
+    zip_file_nb = get_specific_file_nb(".zip")
+
+    pie_chart_css_value = generate_pie_chart_css(txt_file_nb, py_file_nb, pdf_file_nb, jpg_file_nb, png_file_nb, docx_file_nb, xlsx_file_nb, pptx_file_nb, mp3_file_nb, mp4_file_nb, zip_file_nb)
 
     return {
         "machine_name": machine_name,
@@ -232,8 +248,15 @@ def get_dashboard_vars():
         "py_file_nb": py_file_nb,
         "pdf_file_nb": pdf_file_nb,
         "jpg_file_nb": jpg_file_nb,
+        "png_file_nb": png_file_nb,
+        "docx_file_nb": docx_file_nb,
+        "xlsx_file_nb": xlsx_file_nb,
+        "pptx_file_nb": pptx_file_nb,
+        "mp3_file_nb": mp3_file_nb,
+        "mp4_file_nb": mp4_file_nb,
+        "zip_file_nb": zip_file_nb,
         "process_list": process_list,
-        "pie_chart_css_value": generate_pie_chart_css(txt_file_nb, py_file_nb, pdf_file_nb, jpg_file_nb)
+        "pie_chart_css_value": pie_chart_css_value
     }
 
 # Flask things
