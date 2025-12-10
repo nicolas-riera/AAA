@@ -57,15 +57,22 @@ Pour un rendu statique, ouvrez le fichier `index.html` après avoir lancer le sc
 
 ## Captures d'écran
 
-TBD
+![screenshot_1](/screenshots/screenshot_1.png)
+![screenshot_2](/screenshots/screenshot_2.png)
+![screenshot_3](/screenshots/screenshot_3.png)
 
 ## Difficultés rencontrées
 
-TBD
+- Utilisation processeur > 100% (non-gestion du multi-cœur)
+- Implémentation de Flask
 
 ## Améliorations possibles
 
-TBD
+- Ajout de JavaScript
+    - Graphiques à courbe
+    - Rechargement automatique en arrière-plan
+- Optimisation des performances globales
+- Ajout d’informations supplémentaires 
 
 ## Auteur
 
