@@ -34,6 +34,16 @@
             <p>Fréquence : {{ cpu_frequency }} GHz</p>
             <p>Utilisation : {{ cpu_usage }}%</p>
             <progress id="progress_cpu" max="100" value="{{ cpu_usage }}"></progress>
+
+            <h3>Utilisation CPU par cœur</h3>
+            {% for cpu in cores_usage %}
+            <div class="cores_usage_elements">
+
+                <label>{{ loop.index0 }} : {{ cpu }}%</label>
+                <progress id="progress_cores" max="100" value="{{ cpu }}"></progress>
+
+            </div>
+            {% endfor %}
         </section>
 
         <!--Memory Section -->

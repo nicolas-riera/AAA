@@ -135,37 +135,6 @@ def generate_pie_chart_css(txt_nb, py_nb, pdf_nb, jpg_nb, png_nb, docx_nb, xlsx_
 
     return css_gradient_value
 
-def get_all_threads_cpu_percent():
-
-    threads_usage = []
-
-    for proc in psutil.process_iter():
-        try:
-            proc.cpu_percent(None)
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
-            continue
-
-    time.sleep(1)
-
-    for proc in psutil.process_iter():
-        try:
-            for thread in proc.threads():
-                tid = thread.id
-                cpu = thread.user_time + thread.system_time  
-                threads_usage.append({
-                    "pid": proc.pid,
-                    "tid": tid,
-                    "cpu_percent": proc.cpu_percent(None) 
-                })
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
-            continue
-
-    cpu_count = psutil.cpu_count()
-    for t in threads_usage:
-        t["cpu_percent"] = min(t["cpu_percent"] / cpu_count, 100.0)
-
-    return threads_usage
-
 
 # Variables that can be calculed once
 
@@ -222,6 +191,7 @@ def get_dashboard_vars():
     zip_file_nb = get_specific_file_nb(".zip")
 
     pie_chart_css_value = generate_pie_chart_css(txt_file_nb, py_file_nb, pdf_file_nb, jpg_file_nb, png_file_nb, docx_file_nb, xlsx_file_nb, pptx_file_nb, mp3_file_nb, mp4_file_nb, zip_file_nb)
+    cores_usage =  psutil.cpu_percent(interval=0.5, percpu=True)
 
     return {
         "machine_name": machine_name,
@@ -232,6 +202,7 @@ def get_dashboard_vars():
         "cpu_cores_nb": cpu_cores_nb,
         "cpu_frequency": cpu_frequency,
         "cpu_usage": cpu_usage,
+        "cores_usage" : cores_usage,
         "total_ram": total_ram,
         "ram_usage_nb": ram_usage_nb,
         "ram_usage_percentage": ram_usage_percentage,

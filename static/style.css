@@ -46,10 +46,15 @@ section {
     width: 100%;
 }
 
-.files-container {
+#progress_cores {
+    width: 80%;
+}
+
+.files-container,
+.cores_usage_elements {
     display: flex;
     justify-content: space-around;
-    align-items: center;   
+    align-items: center;
 }
 
 .pie-chart {
