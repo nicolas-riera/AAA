@@ -28,49 +28,37 @@ def get_specific_file_nb(extension):
                 continue
     return (count)
 
-def get_process_cpu_usage():
+def get_process_list():
     cpu_count = psutil.cpu_count(logical=True)
 
     for proc in psutil.process_iter():
         try:
             proc.cpu_percent(None)
-            for _ in proc.threads():
-                pass
         except:
-            continue
+            pass
 
-    results = []
-    for proc in psutil.process_iter(attrs=["pid", "name"]):
+    time.sleep(1)
 
-        try:
-            cpu_raw = proc.cpu_percent(None)
+    process_list = []
 
-            cpu_normalized = min(cpu_raw / cpu_count, 100)            
-
-            results.append({
-                "pid": proc.info["pid"],
-                "name": proc.info["name"],
-                "cpu_percent": cpu_normalized, 
-            })
-
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
-            continue
-
-    return results
-
-def get_process_ram_usage():
-    processes = []
-    for proc in psutil.process_iter(attrs=["pid", "name", "memory_percent"]):
+    for proc in psutil.process_iter(['pid', 'name', 'memory_percent']):
         try:
             info = proc.info
-            processes.append({
+
+            cpu = proc.cpu_percent(None) / cpu_count  
+            mem = info["memory_percent"] or 0.0
+
+            process_list.append({
                 "pid": info["pid"],
                 "name": info["name"],
-                "ram_percent": info["memory_percent"]
+                "cpu_percent": round(cpu, 1),
+                "memory_percent": round(mem, 1)
             })
+
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             continue
-    return processes
+
+    return process_list
 
 def get_network_speed(dt=1.0):
 
@@ -100,9 +88,12 @@ def get_network_speed(dt=1.0):
 
     return ul_kB_s, dl_kB_s
 
-def get_top3_cpu_processes(processes):
-    processes_sorted = sorted(processes, key=lambda p: p["cpu_percent"], reverse=True)
-    return [f"PID: {p['pid']}, Nom: {p['name']}, CPU: {p['cpu_percent']}%, RAM: {p['memory_percent']}%" for p in processes_sorted[:3]]
+def get_top3_cpu_processes(process_list):
+    top3 = sorted(process_list, key=lambda p: p["cpu_percent"], reverse=True)[:3]
+    return [
+        f"PID: {p['pid']}, Nom: {p['name']}, CPU: {p['cpu_percent']}%, RAM: {p['memory_percent']}%"
+        for p in top3
+    ]
 
 # Variables that can be calculed once
 
@@ -139,20 +130,7 @@ def get_dashboard_vars():
     ip_address = socket.gethostbyname(socket.gethostname())
     up_speed, dl_speed = get_network_speed()
 
-    process_list = []
-    
-    for proc in psutil.process_iter(['pid', 'name', 'cpu_percent', 'memory_percent']):
-        try:
-            p_info = proc.info
-            
-            p_info['cpu_percent'] = round(p_info['cpu_percent'] or 0, 1)
-            p_info['memory_percent'] = round(p_info['memory_percent'] or 0, 1)
-            
-            process_list.append(p_info)
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
-            pass
-    
-    process_list = sorted(process_list, key=lambda p: p['memory_percent'], reverse=True)
+    process_list = sorted(get_process_list(), key=lambda p: p["name"].lower()) 
     process1 = get_top3_cpu_processes(process_list)[0]
     process2 = get_top3_cpu_processes(process_list)[1]
     process3 = get_top3_cpu_processes(process_list)[2]

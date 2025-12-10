@@ -84,7 +84,7 @@
                 </thead>
                 <tbody>
                     {% for process in process_list %}
-                    {% if loop.index <= 20 %} <tr>
+                    <tr>
                         <td>{{ process.pid }}</td>
                         <td>{{ process.name }}</td>
 
@@ -97,7 +97,6 @@
                         </td>
 
                         </tr>
-                        {% endif %}
                         {% endfor %}
                 </tbody>
             </table>
