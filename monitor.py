@@ -29,26 +29,34 @@ def get_specific_file_nb(extension):
     return (count)
 
 def get_process_cpu_usage():
-    processes = []
-    for proc in psutil.process_iter(attrs=["pid", "name"]):
+    cpu_count = psutil.cpu_count(logical=True)
+
+    for proc in psutil.process_iter():
         try:
-            proc.cpu_percent(interval=None)
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
+            proc.cpu_percent(None)
+            for _ in proc.threads():
+                pass
+        except:
             continue
-    import time
-    time.sleep(0.1)
+
+    results = []
     for proc in psutil.process_iter(attrs=["pid", "name"]):
+
         try:
-            cpu = proc.cpu_percent(interval=None)
-            processes.append({
+            cpu_raw = proc.cpu_percent(None)
+
+            cpu_normalized = min(cpu_raw / cpu_count, 100)            
+
+            results.append({
                 "pid": proc.info["pid"],
                 "name": proc.info["name"],
-                "cpu_percent": cpu
+                "cpu_percent": cpu_normalized, 
             })
+
         except (psutil.NoSuchProcess, psutil.AccessDenied):
             continue
 
-    return processes
+    return results
 
 def get_process_ram_usage():
     processes = []

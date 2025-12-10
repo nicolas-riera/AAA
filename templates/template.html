@@ -32,6 +32,7 @@
             <p>Nombre de cœurs : {{ cpu_cores_nb }}</p>
             <p>Fréquence : {{ cpu_frequency }} GHz</p>
             <p>Utilisation : {{ cpu_usage }}%</p>
+            <progress  id="progress_cpu" max="100" value="{{ cpu_usage }}"></progress>
         </section>
 
         <!--Memory Section -->
