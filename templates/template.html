@@ -33,7 +33,10 @@
             <p>Nombre de cœurs : {{ cpu_cores_nb }}</p>
             <p>Fréquence : {{ cpu_frequency }} GHz</p>
             <p>Utilisation : {{ cpu_usage }}%</p>
-            <progress id="progress_cpu" max="100" value="{{ cpu_usage }}"></progress>
+            <div class="progress-container">
+            <div class="progress-fill" style="width: {{ cpu_usage }}%;"></div>
+            <span class="progress-text" style="left: {{ cpu_usage }}%;">{{ cpu_usage }}%</span>
+            </div>
 
             <h3>Utilisation CPU par cœur</h3>
             {% for cpu in cores_usage %}
