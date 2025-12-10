@@ -177,6 +177,7 @@ def get_dashboard_vars():
     process3 = get_top3_cpu_processes(process_list)[2]
 
     total_storage, used_storage, free_storage = shutil.disk_usage("/")
+    used_storage_percent = round((used_storage * 100) / total_storage, 2)
 
     txt_file_nb = get_specific_file_nb(".txt")
     py_file_nb = get_specific_file_nb(".py")
@@ -215,6 +216,7 @@ def get_dashboard_vars():
         "total_storage": total_storage // (2**30),
         "used_storage": used_storage // (2**30),
         "free_storage": free_storage // (2**30),
+        "used_storage_percent" : used_storage_percent,
         "txt_file_nb": txt_file_nb,
         "py_file_nb": py_file_nb,
         "pdf_file_nb": pdf_file_nb,

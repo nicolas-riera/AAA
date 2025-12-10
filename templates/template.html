@@ -32,18 +32,21 @@
             <h2>CPU</h2>
             <p>Nombre de cœurs : {{ cpu_cores_nb }}</p>
             <p>Fréquence : {{ cpu_frequency }} GHz</p>
-            <p>Utilisation : {{ cpu_usage }}%</p>
+            <p>Utilisation :</p>
             <div class="progress-container">
-            <div class="progress-fill" style="width: {{ cpu_usage }}%;"></div>
-            <span class="progress-text" style="left: {{ cpu_usage }}%;">{{ cpu_usage }}%</span>
+                <div class="progress-fill" style="width: {{ cpu_usage }}%;"></div>
+                <span class="progress-text" style="left: {{ cpu_usage }}%;">{{ cpu_usage }}%</span>
             </div>
 
             <h3>Utilisation CPU par cœur</h3>
             {% for cpu in cores_usage %}
             <div class="cores_usage_elements">
 
-                <label>{{ loop.index0 }} : {{ cpu }}%</label>
-                <progress id="progress_cores" max="100" value="{{ cpu }}"></progress>
+                <label>N°{{ loop.index0 }} </label>
+                <div class="progress-container">
+                    <div class="progress-fill" style="width: {{ cpu }}%;"></div>
+                    <span class="progress-text" style="left: {{ cpu }}%;">{{ cpu }}%</span>
+                </div>
 
             </div>
             {% endfor %}
@@ -53,8 +56,11 @@
         <section>
             <h2>Mémoire</h2>
             <p>RAM totale : {{ total_ram }} Go</p>
-            <p>RAM utilisé : {{ ram_usage_nb }} Go | {{ ram_usage_percentage }}%</p>
-            <progress id="progress_ram" max="100" value="{{ ram_usage_percentage }}"></progress>
+            <p>RAM utilisé : {{ ram_usage_nb }} Go</p>
+            <div class="progress-container">
+                <div class="progress-fill" style="width: {{ ram_usage_percentage }}%;"></div>
+                <span class="progress-text" style="left: {{ ram_usage_percentage }}%;">{{ ram_usage_percentage }}%</span>
+            </div>
         </section>
 
         <!-- Network Section -->
@@ -70,7 +76,10 @@
             <p>Stockage total : {{ total_storage }} GiB</p>
             <p>Stockage utilisé : {{ used_storage }} GiB</p>
             <p>Stockage libre : {{ free_storage }} GiB</p>
-            <progress id="progress_storage" max="{{ total_storage }}" value="{{ used_storage }}"></progress>
+            <div class="progress-container">
+                <div class="progress-fill" style="width: {{ used_storage_percent }}%;"></div>
+                <span class="progress-text" style="left: {{ used_storage_percent }}%;">{{ used_storage_percent }}%</span>
+            </div>
         </section>
 
         <!-- File Section -->

@@ -40,16 +40,6 @@ section {
     background-color: var(--block-color);
 }
 
-#progress_ram,
-#progress_cpu,
-#progress_storage {
-    width: 100%;
-}
-
-#progress_cores {
-    width: 80%;
-}
-
 .files-container,
 .cores_usage_elements {
     display: flex;
@@ -151,6 +141,11 @@ li {
     position: relative;
     overflow: hidden;
     font-family: sans-serif;
+}
+
+.cores_usage_elements .progress-container {
+    width: 80%;
+    margin: 5px;
 }
 
 .progress-fill {
