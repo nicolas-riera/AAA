@@ -32,7 +32,7 @@ def get_specific_file_data(extension):
             except Exception:
                 continue
 
-    return count, total_size
+    return count, total_size / (1024 * 1024)
 
 
 def get_process_list():
