@@ -39,7 +39,7 @@ Exécutez le script principal pour démarrer le serveur de monitoring :
 
 #### Dashboard dynamique
 
-Dans votre navigateur, accédez à : `http://localhost:5000` après avoir exécuté le script
+Dans votre navigateur, accédez à : `http://localhost:5000` pendant l'exécution du script.
 
 #### Ouvrir index.html dans le navigateur
 
